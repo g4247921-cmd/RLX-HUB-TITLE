@@ -1,0 +1,317 @@
+-- Obfuscated + encoded texts (fixed & working)
+local P=game:GetService("Players")
+local ME=P.LocalPlayer
+local PG=ME:WaitForChild("PlayerGui")
+
+-- decoder: prefix (emoji) + reverse(suffixEncoded)
+local function d(pref,enc) return (pref or "") .. string.reverse(enc or "") end
+
+-- encoded (reversed) teks
+local T1 = d("🌲 ","XLR")                           -- 🌲 RLX
+local T2 = d("🌲 ","BUH RETSAM XLR")                -- 🌲 RLX MASTER HUB
+local T3 = d("🎖️ ","reviG eltiT")                  -- 🎖️ Title Giver
+local T4 = d("✅ ","eltiT gnasaP")                  -- ✅ Pasang Title
+local T5 = d("♻️ ","eltiT teseR")                   -- ♻️ Reset Title
+local T6 = d("","...umak eltit kiteK")             -- Ketik title kamu...
+local T7 = d(""," :ijomE hiliP")                   -- Pilih Emoji:
+local T8 = d(""," :anraW hiliP")                   -- Pilih Warna:
+local T9 = d("","reyalP")                          -- Player
+local T10 = d("✅ ","!gnasapid lisahreb eltiT")     -- ✅ Title berhasil dipasang!
+local T11 = d("♻️ ","!teserid eltiT")               -- ♻️ Title direset!
+local T12 = d("","!yllufsseccuS dedaoL IU reviG eltiT XLR") -- load msg
+
+-- bersihkan GUI lama
+if PG:FindFirstChild("RLX_TitleGiver_Full") then
+	pcall(function() PG.RLX_TitleGiver_Full:Destroy() end)
+end
+
+-- mulai build (variabel obfuscated)
+local a=Instance.new("ScreenGui")
+a.Name="RLX_TitleGiver_Full"
+a.ResetOnSpawn=false
+a.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
+a.Parent=PG
+
+local b=Instance.new("Frame",a)
+b.Size=UDim2.new(1,0,1,0)
+b.BackgroundColor3=Color3.fromRGB(5,40,10)
+b.ZIndex=50
+
+local c=Instance.new("ImageButton",b)
+c.Name="LogoButton"
+c.AnchorPoint=Vector2.new(0.5,0.5)
+c.Size=UDim2.new(0.5,0,0.5,0)
+c.Position=UDim2.new(0.5,0,0.45,0)
+c.Image="rbxassetid://109697835942498"
+c.BackgroundTransparency=1
+c.ImageTransparency=1
+c.ZIndex=51
+c.AutoButtonColor=false
+c.ScaleType=Enum.ScaleType.Fit
+
+-- fade function (fixed)
+local function fade(img,from,to,steps,waitTime)
+	steps = tonumber(steps) or 10
+	waitTime = tonumber(waitTime) or 0.03
+	for i=0,steps do
+		local t = from + (to - from) * (i / steps)
+		pcall(function() img.ImageTransparency = t end)
+		task.wait(waitTime)
+	end
+end
+
+local splashDone=false
+
+local function finishSplash()
+	if splashDone then return end
+	splashDone=true
+	for i=1,12 do
+		pcall(function() b.BackgroundTransparency = i*(1/12) end)
+		task.wait(0.03)
+	end
+	pcall(function() b:Destroy() end)
+	-- pastikan hub muncul setelah splash hilang
+	if hubFrame then
+		pcall(function() hubFrame.Visible = true end)
+	end
+end
+
+-- spawn fade & auto-skip
+task.spawn(function()
+	fade(c,1,0,12,0.03)
+	local t=0
+	while t<2 do
+		if splashDone then return end
+		task.wait(0.2)
+		t+=0.2
+	end
+	if not splashDone then finishSplash() end
+end)
+
+c.MouseButton1Click:Connect(finishSplash)
+
+-- HUB button + frame
+local hubBtn=Instance.new("TextButton",a)
+hubBtn.Size=UDim2.new(0,70,0,40)
+hubBtn.Position=UDim2.new(0.01,0,0.06,0)
+hubBtn.Text=T1
+hubBtn.Font=Enum.Font.GothamBold
+hubBtn.TextSize=16
+hubBtn.BackgroundColor3=Color3.fromRGB(30,90,40)
+hubBtn.TextColor3=Color3.new(1,1,1)
+hubBtn.ZIndex=40
+hubBtn.Active=true
+hubBtn.Draggable=true
+Instance.new("UICorner",hubBtn).CornerRadius=UDim.new(0,8)
+
+local hubFrame=Instance.new("Frame",a)
+hubFrame.Size=UDim2.new(0,320,0,420)
+hubFrame.Position=UDim2.new(0.01,0,0.12,0)
+hubFrame.BackgroundColor3=Color3.fromRGB(15,60,25)
+hubFrame.BorderSizePixel=0
+hubFrame.Visible=false
+hubFrame.ZIndex=40
+Instance.new("UICorner",hubFrame).CornerRadius=UDim.new(0,12)
+
+local hubTitle=Instance.new("TextLabel",hubFrame)
+hubTitle.Size=UDim2.new(1,0,0,40)
+hubTitle.BackgroundTransparency=1
+hubTitle.Font=Enum.Font.GothamBold
+hubTitle.TextSize=20
+hubTitle.TextColor3=Color3.new(1,1,1)
+hubTitle.Text=T2
+
+-- Title Giver Section
+local titleBtn=Instance.new("TextButton",hubFrame)
+titleBtn.Size=UDim2.new(1,-20,0,40)
+titleBtn.Position=UDim2.new(0,10,0,50)
+titleBtn.Text=T3
+titleBtn.Font=Enum.Font.GothamBold
+titleBtn.TextSize=16
+titleBtn.BackgroundColor3=Color3.fromRGB(30,120,50)
+titleBtn.TextColor3=Color3.new(1,1,1)
+Instance.new("UICorner",titleBtn).CornerRadius=UDim.new(0,8)
+
+local titleFrame=Instance.new("Frame",hubFrame)
+titleFrame.Size=UDim2.new(1,-20,0,300)
+titleFrame.Position=UDim2.new(0,10,0,110)
+titleFrame.BackgroundColor3=Color3.fromRGB(12,40,18)
+titleFrame.Visible=false
+titleFrame.ZIndex=41
+Instance.new("UICorner",titleFrame).CornerRadius=UDim.new(0,8)
+
+local scroll=Instance.new("ScrollingFrame",titleFrame)
+scroll.Size=UDim2.new(1,-10,1,-10)
+scroll.Position=UDim2.new(0,5,0,5)
+scroll.CanvasSize=UDim2.new(0,0,1.2,0)
+scroll.BackgroundTransparency=1
+scroll.ScrollBarThickness=6
+
+-- input
+local inputBox=Instance.new("TextBox",scroll)
+inputBox.Size=UDim2.new(1,-20,0,36)
+inputBox.Position=UDim2.new(0,10,0,10)
+inputBox.PlaceholderText=T6
+inputBox.Font=Enum.Font.Gotham
+inputBox.TextSize=16
+inputBox.BackgroundColor3=Color3.fromRGB(35,35,35)
+inputBox.TextColor3=Color3.new(1,1,1)
+Instance.new("UICorner",inputBox).CornerRadius=UDim.new(0,6)
+
+-- emojis
+local emojis = {"🔥","💎","🌲","🌙","👑","🎮","⚡","💀","🎯","🦋"}
+local eLabel=Instance.new("TextLabel",scroll)
+eLabel.Size=UDim2.new(1,-20,0,25)
+eLabel.Position=UDim2.new(0,10,0,60)
+eLabel.Text=T7
+eLabel.BackgroundTransparency=1
+eLabel.TextColor3=Color3.new(1,1,1)
+eLabel.Font=Enum.Font.Gotham
+eLabel.TextSize=14
+
+local eFrame=Instance.new("Frame",scroll)
+eFrame.Size=UDim2.new(1,-20,0,40)
+eFrame.Position=UDim2.new(0,10,0,85)
+eFrame.BackgroundTransparency=1
+
+local xpos=0
+for _,em in ipairs(emojis) do
+	local btn=Instance.new("TextButton",eFrame)
+	btn.Size=UDim2.new(0,36,0,36)
+	btn.Position=UDim2.new(0,xpos,0,0)
+	btn.Text=em
+	btn.Font=Enum.Font.GothamBold
+	btn.TextSize=20
+	btn.BackgroundColor3=Color3.fromRGB(45,45,45)
+	btn.TextColor3=Color3.new(1,1,1)
+	Instance.new("UICorner",btn).CornerRadius=UDim.new(0,6)
+	xpos+=42
+	btn.MouseButton1Click:Connect(function() inputBox.Text = em .. " " .. inputBox.Text end)
+end
+
+-- color picker
+local colors = {
+	Color3.fromRGB(255,255,255),
+	Color3.fromRGB(255,0,0),
+	Color3.fromRGB(0,255,0),
+	Color3.fromRGB(0,170,255),
+	Color3.fromRGB(255,255,0),
+	Color3.fromRGB(255,0,255),
+	Color3.fromRGB(255,128,0),
+}
+local chosenColor = Color3.new(1,1,1)
+
+local cLabel=Instance.new("TextLabel",scroll)
+cLabel.Size=UDim2.new(1,-20,0,25)
+cLabel.Position=UDim2.new(0,10,0,140)
+cLabel.Text=T8
+cLabel.BackgroundTransparency=1
+cLabel.TextColor3=Color3.new(1,1,1)
+cLabel.Font=Enum.Font.Gotham
+cLabel.TextSize=14
+
+local cFrame=Instance.new("Frame",scroll)
+cFrame.Size=UDim2.new(1,-20,0,40)
+cFrame.Position=UDim2.new(0,10,0,165)
+cFrame.BackgroundTransparency=1
+
+local cx=0
+for _,col in ipairs(colors) do
+	local cb=Instance.new("TextButton",cFrame)
+	cb.Size=UDim2.new(0,36,0,36)
+	cb.Position=UDim2.new(0,cx,0,0)
+	cb.BackgroundColor3=col
+	cb.Text=""
+	Instance.new("UICorner",cb).CornerRadius=UDim.new(0,6)
+	cx+=42
+	cb.MouseButton1Click:Connect(function() chosenColor=col end)
+end
+
+-- apply & reset
+local applyBtn=Instance.new("TextButton",scroll)
+applyBtn.Size=UDim2.new(1,-20,0,36)
+applyBtn.Position=UDim2.new(0,10,0,220)
+applyBtn.Text=T4
+applyBtn.Font=Enum.Font.GothamBold
+applyBtn.TextSize=16
+applyBtn.BackgroundColor3=Color3.fromRGB(50,120,255)
+applyBtn.TextColor3=Color3.new(1,1,1)
+Instance.new("UICorner",applyBtn).CornerRadius=UDim.new(0,6)
+
+local resetBtn=Instance.new("TextButton",scroll)
+resetBtn.Size=UDim2.new(1,-20,0,36)
+resetBtn.Position=UDim2.new(0,10,0,265)
+resetBtn.Text=T5
+resetBtn.Font=Enum.Font.GothamBold
+resetBtn.TextSize=16
+resetBtn.BackgroundColor3=Color3.fromRGB(200,60,60)
+resetBtn.TextColor3=Color3.new(1,1,1)
+Instance.new("UICorner",resetBtn).CornerRadius=UDim.new(0,6)
+
+-- popup
+local function popup(txt,col)
+	col = col or Color3.new(1,1,1)
+	local n=Instance.new("TextLabel",a)
+	n.Size=UDim2.new(0,260,0,42)
+	n.Position=UDim2.new(0.5,-130,0.05,0)
+	n.AnchorPoint=Vector2.new(0.5,0)
+	n.BackgroundColor3=Color3.fromRGB(30,30,30)
+	n.TextColor3=col
+	n.Font=Enum.Font.GothamBold
+	n.TextSize=16
+	n.Text=txt
+	n.ZIndex=60
+	Instance.new("UICorner",n).CornerRadius=UDim.new(0,8)
+	for i=1,10 do n.TextTransparency=1-i*0.1; n.BackgroundTransparency=1-i*0.1; task.wait(0.02) end
+	task.wait(1.2)
+	for i=1,10 do n.TextTransparency=i*0.1; n.BackgroundTransparency=i*0.1; task.wait(0.02) end
+	pcall(function() n:Destroy() end)
+end
+
+-- setTitle
+local function setTitle(pl,txt,col)
+	local ch = pl.Character or pl.CharacterAdded:Wait()
+	local head = ch:FindFirstChild("Head")
+	if not head then return end
+	local old = head:FindFirstChild("RLX_Title")
+	if old then old:Destroy() end
+	local bill = Instance.new("BillboardGui",head)
+	bill.Name="RLX_Title"
+	bill.Size=UDim2.new(0,200,0,50)
+	bill.StudsOffset=Vector3.new(0,2.5,0)
+	bill.AlwaysOnTop=true
+	local lbl = Instance.new("TextLabel",bill)
+	lbl.Size=UDim2.new(1,0,1,0)
+	lbl.BackgroundTransparency=1
+	lbl.Font=Enum.Font.GothamBold
+	lbl.TextColor3=col
+	lbl.TextStrokeTransparency=0.4
+	lbl.TextSize=18
+	lbl.Text=txt
+end
+
+-- connections
+hubBtn.MouseButton1Click:Connect(function() hubFrame.Visible = not hubFrame.Visible end)
+titleBtn.MouseButton1Click:Connect(function() titleFrame.Visible = not titleFrame.Visible end)
+
+applyBtn.MouseButton1Click:Connect(function()
+	local txt = (inputBox.Text~="") and inputBox.Text or T9
+	setTitle(ME, txt, chosenColor)
+	popup(T10, Color3.fromRGB(100,255,100))
+end)
+
+resetBtn.MouseButton1Click:Connect(function()
+	local head = ME.Character and ME.Character:FindFirstChild("Head")
+	if head and head:FindFirstChild("RLX_Title") then
+		head.RLX_Title:Destroy()
+	end
+	inputBox.Text=""
+	popup(T11, Color3.fromRGB(255,200,200))
+end)
+
+c.MouseButton1Click:Connect(function()
+	if b and b.Parent then pcall(function() b:Destroy() end) end
+	hubFrame.Visible = true
+end)
+
+print(T12)
