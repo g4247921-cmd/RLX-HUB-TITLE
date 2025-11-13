@@ -1,0 +1,219 @@
+-- Project By MasterRLX 🔥
+-- LocalScript (StarterGui)
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:FindFirstChildOfClass("Humanoid") or character:WaitForChild("Humanoid")
+
+player.CharacterAdded:Connect(function(char)
+	character = char
+	humanoid = character:WaitForChild("Humanoid")
+end)
+
+-- ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "MasterRLXGui"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- Logo toggle button
+local LogoBtn = Instance.new("ImageButton")
+LogoBtn.Size = UDim2.new(0,60,0,60)
+LogoBtn.Position = UDim2.new(0,20,0,20)
+LogoBtn.Image = "rbxassetid://101176082238822"
+LogoBtn.BackgroundTransparency = 0.2
+LogoBtn.BackgroundColor3 = Color3.fromRGB(40,40,40)
+LogoBtn.BorderSizePixel = 0
+LogoBtn.Parent = gui
+LogoBtn.ZIndex = 10
+
+-- Main Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0,340,0,360)
+MainFrame.Position = UDim2.new(0.5,-170,0.5,-180)
+MainFrame.BackgroundColor3 = Color3.fromRGB(35,35,35)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = gui
+MainFrame.Visible = false
+
+-- Header
+local Header = Instance.new("Frame", MainFrame)
+Header.Size = UDim2.new(1,0,0,45)
+Header.BackgroundTransparency = 0.8
+Header.ZIndex = 2
+
+local Title = Instance.new("TextLabel", Header)
+Title.Size = UDim2.new(1,-40,1,0)
+Title.Position = UDim2.new(0,10,0,0)
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBold
+Title.TextScaled = true
+Title.TextColor3 = Color3.fromRGB(255,180,50)
+Title.Text = "🔥 Project By MasterRLX 🔥"
+
+local CloseBtn = Instance.new("TextButton", Header)
+CloseBtn.Size = UDim2.new(0,32,0,32)
+CloseBtn.Position = UDim2.new(1,-36,0,6)
+CloseBtn.Text = "✖"
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextScaled = true
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200,50,50)
+CloseBtn.TextColor3 = Color3.new(1,1,1)
+
+-- ScrollFrame
+local Scroll = Instance.new("ScrollingFrame", MainFrame)
+Scroll.Size = UDim2.new(1,-20,1,-55)
+Scroll.Position = UDim2.new(0,10,0,50)
+Scroll.BackgroundTransparency = 1
+Scroll.ScrollBarThickness = 8
+
+local UIList = Instance.new("UIListLayout", Scroll)
+UIList.Padding = UDim.new(0,6)
+UIList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+UIList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+	Scroll.CanvasSize = UDim2.new(0,0,0, UIList.AbsoluteContentSize.Y + 10)
+end)
+
+-- Tombol loadstring singkat
+local function LoadBtn(name, url, color)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(1,-20,0,40)
+	btn.BackgroundColor3 = color
+	btn.Font = Enum.Font.GothamBold
+	btn.TextScaled = true
+	btn.TextColor3 = Color3.fromRGB(255,255,255)
+	btn.Text = name
+	btn.Parent = Scroll
+	btn.MouseButton1Click:Connect(function()
+		loadstring(game:HttpGet(url))()
+	end)
+	return btn
+end
+
+-- Tambahkan tombol loadstring (contoh GitHub)
+LoadBtn("🌑 Dark Hub", "https://raw.githubusercontent.com/darkxwin/darkxsourcethinkyoutousedarkx/main/darkx", Color3.fromRGB(60,60,120))
+LoadBtn("🌸 Korn Hub", "https://raw.githubusercontent.com/DevKron/Kron_Hub/refs/heads/main/version_1.0", Color3.fromRGB(120,60,120))
+LoadBtn("✈ Fly", "https://raw.githubusercontent.com/MasterRLX/Scripts/main/fly.lua", Color3.fromRGB(60,120,60))
+LoadBtn("💎 Infinite Yield", "https://rawscripts.net/raw/Universal-Script-Infinite-Script-43437", Color3.fromRGB(100,100,180))
+LoadBtn("🎣 SC Fish It", "https://raw.githubusercontent.com/Vinzyy13/VinzHub/refs/heads/main/Fish-It", Color3.fromRGB(50,150,100))
+
+-- Toggle Noclip
+local noclip = false
+local noclipBtn = LoadBtn("👻 Noclip (OFF ❌)", Color3.fromRGB(120,60,60), function()
+	noclip = not noclip
+	noclipBtn.Text = "👻 Noclip ("..(noclip and "ON ✅" or "OFF ❌")..")"
+end)
+
+RunService.Stepped:Connect(function()
+	if noclip and character and character.Parent then
+		for _, part in pairs(character:GetDescendants()) do
+			if part:IsA("BasePart") then part.CanCollide=false end
+		end
+	end
+end)
+
+-- Toggle Infinite Jump
+local infjump = false
+local ijBtn = LoadBtn("🚀 Infinite Jump (OFF ❌)", Color3.fromRGB(60,120,120), function()
+	infjump = not infjump
+	ijBtn.Text = "🚀 Infinite Jump ("..(infjump and "ON ✅" or "OFF ❌")..")"
+end)
+
+UserInputService.JumpRequest:Connect(function()
+	if infjump and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+		player.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+	end
+end)
+
+-- WalkSpeed Slider
+local WalkFrame = Instance.new("Frame")
+WalkFrame.Size = UDim2.new(1,-20,0,60)
+WalkFrame.BackgroundColor3 = Color3.fromRGB(45,45,70)
+WalkFrame.Parent = Scroll
+
+local WalkLabel = Instance.new("TextLabel", WalkFrame)
+WalkLabel.Size = UDim2.new(1,0,0,24)
+WalkLabel.Position = UDim2.new(0,0,0,2)
+WalkLabel.BackgroundTransparency = 1
+WalkLabel.Font = Enum.Font.GothamBold
+WalkLabel.TextScaled = true
+WalkLabel.TextColor3 = Color3.fromRGB(255,255,255)
+WalkLabel.Text = "🏃 WalkSpeed: 16"
+
+local SliderBack = Instance.new("Frame", WalkFrame)
+SliderBack.Size = UDim2.new(0.9,0,0,16)
+SliderBack.Position = UDim2.new(0.05,0,0,36)
+SliderBack.BackgroundColor3 = Color3.fromRGB(70,70,100)
+SliderBack.BorderSizePixel = 0
+SliderBack.Active = true
+
+local Knob = Instance.new("ImageButton", SliderBack)
+Knob.Size = UDim2.new(0,16,0,20)
+Knob.AnchorPoint = Vector2.new(0.5,0.5)
+Knob.Position = UDim2.new(0.1,0,0.5,0)
+Knob.BackgroundColor3 = Color3.fromRGB(255,180,50)
+Knob.BorderSizePixel = 0
+Knob.AutoButtonColor = false
+
+-- WalkSpeed logic
+local function setSpeed(frac)
+	frac = math.clamp(frac,0,1)
+	local speed = math.floor(16 + frac*100)
+	if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+		player.Character:FindFirstChildOfClass("Humanoid").WalkSpeed=speed
+	end
+	WalkLabel.Text="🏃 WalkSpeed: "..speed
+	Knob.Position=UDim2.new(frac,0,0.5,0)
+end
+
+setSpeed(0.0)
+
+local dragging = false
+local currentInput = nil
+local function updateInput(input)
+	if not input then return end
+	local x=input.Position.X
+	local absPos = SliderBack.AbsolutePosition
+	local absSize = SliderBack.AbsoluteSize
+	setSpeed(math.clamp((x-absPos.X)/absSize.X,0,1))
+end
+
+Knob.InputBegan:Connect(function(input)
+	if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then
+		dragging=true
+		currentInput=input
+		updateInput(input)
+	end
+end)
+Knob.InputEnded:Connect(function(input)
+	if input==currentInput then dragging=false currentInput=nil end
+end)
+SliderBack.InputBegan:Connect(function(input)
+	if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then
+		dragging=true
+		currentInput=input
+		updateInput(input)
+	end
+end)
+SliderBack.InputEnded:Connect(function(input)
+	if input==currentInput then dragging=false currentInput=nil end
+end)
+UserInputService.InputChanged:Connect(function(input)
+	if dragging and (input.UserInputType==Enum.UserInputType.MouseMovement or input.UserInputType==Enum.UserInputType.Touch) then
+		updateInput(input)
+	end
+end)
+
+-- Show/Hide GUI
+LogoBtn.MouseButton1Click:Connect(function()
+	MainFrame.Visible = not MainFrame.Visible
+end)
+CloseBtn.MouseButton1Click:Connect(function()
+	MainFrame.Visible = false
+end)

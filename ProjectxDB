@@ -1,0 +1,256 @@
+-- 💚 PROJECT BY DOLYLEADxDB - DELUXE DARK NEON MODE
+-- Versi Premium ILEGAL STYLE ✨ + Glow FX + Rejoin + Adaptive UI + Final Fix
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local VirtualUser = game:GetService("VirtualUser")
+local TeleportService = game:GetService("TeleportService")
+local player = Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hum = char:WaitForChild("Humanoid")
+
+player.CharacterAdded:Connect(function(c)
+	char = c
+	hum = c:WaitForChild("Humanoid")
+end)
+
+-- 🛡️ Anti-AFK System
+player.Idled:Connect(function()
+	VirtualUser:CaptureController()
+	VirtualUser:ClickButton2(Vector2.new())
+end)
+
+-- GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "DOLYLEADxDB_Deluxe"
+gui.ResetOnSpawn = false
+gui.IgnoreGuiInset = true
+gui.Parent = player:WaitForChild("PlayerGui")
+
+-- 🧿 LOGO BUTTON (Adaptive Position)
+local Logo = Instance.new("ImageButton", gui)
+Logo.Size = UDim2.new(0,65,0,65)
+Logo.Position = UDim2.new(0,25,0,math.clamp(workspace.CurrentCamera.ViewportSize.Y * 0.06, 60, 100))
+Logo.Image = "rbxassetid://117829643971742"
+Logo.BackgroundColor3 = Color3.fromRGB(10,10,10)
+Logo.BorderSizePixel = 0
+Logo.AutoButtonColor = false
+Logo.BackgroundTransparency = 0.3
+Logo.ZIndex = 10
+Instance.new("UICorner", Logo).CornerRadius = UDim.new(0,14)
+
+-- ✨ Glow effect
+local glow = Instance.new("UIStroke", Logo)
+glow.Color = Color3.fromRGB(0,255,120)
+glow.Thickness = 2
+glow.Transparency = 0.2
+
+-- 🌌 MAIN FRAME
+local Main = Instance.new("Frame", gui)
+Main.Size = UDim2.new(0,370,0,520)
+Main.Position = UDim2.new(0.5,-185,0.5,-260)
+Main.BackgroundColor3 = Color3.fromRGB(10,40,15)
+Main.BackgroundTransparency = 0.15
+Main.Visible = false
+Main.Active = true
+Main.Draggable = true
+Instance.new("UICorner", Main).CornerRadius = UDim.new(0,16)
+
+-- 🌈 Neon Glow
+local outline = Instance.new("UIStroke", Main)
+outline.Color = Color3.fromRGB(0,255,100)
+outline.Thickness = 3
+outline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+-- Header
+local Header = Instance.new("Frame", Main)
+Header.Size = UDim2.new(1,0,0,50)
+Header.BackgroundColor3 = Color3.fromRGB(0,80,0)
+Instance.new("UICorner", Header).CornerRadius = UDim.new(0,14)
+
+local Title = Instance.new("TextLabel", Header)
+Title.Size = UDim2.new(1,0,1,0)
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBlack
+Title.TextScaled = true
+Title.TextColor3 = Color3.fromRGB(0,255,150)
+Title.Text = "🔥 DOLYLEADxDB DELUXE PANEL 🔥"
+
+-- ✖ Close Button
+local Close = Instance.new("TextButton", Header)
+Close.Size = UDim2.new(0,36,0,36)
+Close.Position = UDim2.new(1,-40,0,7)
+Close.Text = "✖"
+Close.TextScaled = true
+Close.Font = Enum.Font.GothamBold
+Close.BackgroundColor3 = Color3.fromRGB(200,50,50)
+Close.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", Close).CornerRadius = UDim.new(0,10)
+Close.MouseButton1Click:Connect(function()
+	TweenService:Create(Main, TweenInfo.new(0.3), {BackgroundTransparency = 1, Position = UDim2.new(0.5,-185,1,0)}):Play()
+	wait(0.25)
+	Main.Visible = false
+end)
+
+-- 🌪️ Scroll Area
+local Scroll = Instance.new("ScrollingFrame", Main)
+Scroll.Size = UDim2.new(1,-20,1,-60)
+Scroll.Position = UDim2.new(0,10,0,55)
+Scroll.BackgroundTransparency = 1
+Scroll.ScrollBarThickness = 6
+local List = Instance.new("UIListLayout", Scroll)
+List.Padding = UDim.new(0,6)
+List.HorizontalAlignment = Enum.HorizontalAlignment.Center
+List:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+	Scroll.CanvasSize = UDim2.new(0,0,0,List.AbsoluteContentSize.Y + 10)
+end)
+
+-- 🔳 Tombol Builder
+local function AddButton(txt, color, func)
+	local b = Instance.new("TextButton", Scroll)
+	b.Size = UDim2.new(1,-20,0,45)
+	b.BackgroundColor3 = color
+	b.BackgroundTransparency = 0.2
+	b.Font = Enum.Font.GothamBold
+	b.TextScaled = true
+	b.Text = txt
+	b.TextColor3 = Color3.new(1,1,1)
+	b.AutoButtonColor = false
+	Instance.new("UICorner", b).CornerRadius = UDim.new(0,10)
+	local glow = Instance.new("UIStroke", b)
+	glow.Color = Color3.fromRGB(0,255,120)
+	glow.Thickness = 1.5
+
+	b.MouseEnter:Connect(function()
+		TweenService:Create(b, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
+	end)
+	b.MouseLeave:Connect(function()
+		TweenService:Create(b, TweenInfo.new(0.2), {BackgroundTransparency = 0.2}):Play()
+	end)
+
+	task.spawn(function()
+		while task.wait(1.2) do
+			if b.Parent then
+				TweenService:Create(glow, TweenInfo.new(1.2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+					{Transparency = math.random() * 0.4 + 0.1}):Play()
+			else break end
+		end
+	end)
+
+	b.MouseButton1Click:Connect(func)
+end
+
+-- 🌐 Script Section
+AddButton("🌑 Dark Hub", Color3.fromRGB(70,70,120), function()
+	loadstring(game:HttpGet("https://web.archive.org/web/20240325130258/https://raw.githubusercontent.com/darkxwin/darkxsourcethinkyoutousedarkx/main/darkx"))()
+end)
+AddButton("🌸 Korn Hub", Color3.fromRGB(120,60,120), function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/DevKron/Kron_Hub/refs/heads/main/version_1.0"))()
+end)
+AddButton("✈️ Fly", Color3.fromRGB(60,120,60), function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/MsL78SwX"))()
+end)
+AddButton("🚗 Car Fly", Color3.fromRGB(100,150,50), function()
+	loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Car-Fly-Script-41504"))()
+end)
+AddButton("🎣 Fish It", Color3.fromRGB(50,150,100), function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Vinzyy13/VinzHub/refs/heads/main/Fish-It"))()
+end)
+
+-- ⚙️ Utility Section
+AddButton("⚙️ Gear Script", Color3.fromRGB(60,60,60), function()
+	loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Get-Some-Gears-36045"))()
+end)
+AddButton("🦥 Auto Clicker", Color3.fromRGB(90,90,90), function()
+	loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Auto-Clicker-47778"))()
+end)
+AddButton("🌀 Infinite Yield", Color3.fromRGB(120,120,120), function()
+	loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Infinite-Yield-43437"))()
+end)
+
+-- 🌐 Server Hop
+AddButton("🌐 Server Hop", Color3.fromRGB(80,100,150), function()
+	loadstring(game:HttpGet("https://pastebin.com/raw/LTtD2G8F"))()
+end)
+
+-- 🔁 Rejoin Server (Final Fix)
+AddButton("🔁 Rejoin Server", Color3.fromRGB(70,130,70), function()
+	local ts = game:GetService("TeleportService")
+	ts:TeleportToPlaceInstance(game.PlaceId, game.JobId, player)
+end)
+
+-- 🧹 Clean GUI
+AddButton("🧹 Bersihkan Semua GUI", Color3.fromRGB(50,80,50), function()
+	for _,v in pairs(player.PlayerGui:GetChildren()) do
+		if v ~= gui then
+			pcall(function() v:Destroy() end)
+		end
+	end
+end)
+
+-- 👻 Noclip
+local noclip = false
+AddButton("👻 Noclip (OFF ❌)", Color3.fromRGB(120,60,60), function()
+	noclip = not noclip
+	for _,c in pairs(Scroll:GetChildren()) do
+		if c:IsA("TextButton") and c.Text:find("Noclip") then
+			c.Text = "👻 Noclip ("..(noclip and "ON ✅" or "OFF ❌")..")"
+		end
+	end
+end)
+RunService.Stepped:Connect(function()
+	if noclip and char then
+		for _,p in pairs(char:GetDescendants()) do
+			if p:IsA("BasePart") then p.CanCollide = false end
+		end
+	end
+end)
+
+-- 🚀 Infinite Jump
+local infjump = false
+AddButton("🚀 Infinite Jump (OFF ❌)", Color3.fromRGB(60,120,120), function()
+	infjump = not infjump
+	for _,c in pairs(Scroll:GetChildren()) do
+		if c:IsA("TextButton") and c.Text:find("Infinite Jump") then
+			c.Text = "🚀 Infinite Jump ("..(infjump and "ON ✅" or "OFF ❌")..")"
+		end
+	end
+end)
+UserInputService.JumpRequest:Connect(function()
+	if infjump and hum then
+		hum:ChangeState(Enum.HumanoidStateType.Jumping)
+	end
+end)
+
+-- 💫 OPEN ANIMATION + SOUND
+local intro = Instance.new("Sound", gui)
+intro.SoundId = "rbxassetid://9118823106"
+intro.Volume = 2
+intro:Play()
+
+local clickSFX = Instance.new("Sound", Logo)
+clickSFX.SoundId = "rbxassetid://138080026"
+clickSFX.Volume = 1
+
+Logo.ImageTransparency = 1
+TweenService:Create(Logo, TweenInfo.new(1), {ImageTransparency = 0}):Play()
+TweenService:Create(glow, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {Transparency = 0.4}):Play()
+
+Logo.MouseButton1Click:Connect(function()
+	clickSFX:Play()
+	if not Main.Visible then
+		Main.Visible = true
+		Main.BackgroundTransparency = 1
+		Main.Position = UDim2.new(0.5,-185,1,0)
+		TweenService:Create(Main, TweenInfo.new(0.4, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+			BackgroundTransparency = 0.15,
+			Position = UDim2.new(0.5,-185,0.5,-260)
+		}):Play()
+	else
+		TweenService:Create(Main, TweenInfo.new(0.3), {Position = UDim2.new(0.5,-185,1,0)}):Play()
+		wait(0.3)
+		Main.Visible = false
+	end
+end)
